@@ -1,0 +1,49 @@
+node {
+    TESTCAFE_DOCKER_PATH = 'tests/docker/Dockerfile'
+}
+pipeline {
+  agent { 
+                 dockerfile {
+                        filename "${TESTCAFE_DOCKER_PATH}"
+                        args  '--net=host -e DISPLAY=":0"'
+                         args '--entrypoint=\'\''
+                        reuseNode true
+                } 
+  }
+ environment {
+  HOME = '.'
+ }
+ stages {
+    stage('Checkout') {
+        steps {
+            checkout([$class: 'GitSCM', branches: [
+            [name: '*/master']
+            ],
+            userRemoteConfigs: [
+            [url: 'https://github.com/sitknewnormal/eShopOnWeb.git']
+            ]
+            ])
+        }
+    }
+    stage('Restore') {
+        steps {
+            sh "dotnet restore eShopOnWeb.sln"
+        }
+    }
+    stage('Clean') {
+        steps {
+            sh "dotnet clean eShopOnWeb.sln"
+        }
+    }
+    stage('Build') {
+        steps {
+            sh "dotnet build --configuration Release eShopOnWeb.sln"
+        }
+    }
+    stage('Functional, integration and unit tests (xUnit)') {
+        steps {
+            sh "dotnet test eShopOnWeb.sln"
+        }
+    }
+ }
+}
