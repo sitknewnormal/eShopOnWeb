@@ -27,22 +27,22 @@ pipeline {
     }
     stage('Restore') {
         steps {
-            sh "dotnet restore eShopOnWeb.sln"
+            sh "MSBuild /t:restore eShopOnWeb.sln"
         }
     }
     stage('Clean') {
         steps {
-            sh "dotnet clean eShopOnWeb.sln"
+            sh "MSBuild /t:clean eShopOnWeb.sln"
         }
     }
     stage('Build') {
         steps {
-            sh "dotnet build --configuration Release eShopOnWeb.sln"
+            sh "MSBuild /t:build --configuration Release eShopOnWeb.sln"
         }
     }
     stage('Functional, integration and unit tests (xUnit)') {
         steps {
-            sh "dotnet test eShopOnWeb.sln"
+            sh "MSBuild /t:test eShopOnWeb.sln"
         }
     }
  }
