@@ -1,5 +1,5 @@
 node {
-    TESTCAFE_DOCKER_PATH = 'tests/docker/Dockerfile'
+    TESTCAFE_DOCKER_PATH = '.devcontainer/Dockerfile'
 }
 pipeline {
   agent { 
