@@ -3,12 +3,12 @@ node {
 }
 pipeline {
   agent { 
-                 dockerfile {
-                        filename "${TESTCAFE_DOCKER_PATH}"
-                        args  '--net=host -e DISPLAY=":0"'
-                         args '--entrypoint=\'\''
-                        reuseNode true
-                } 
+            dockerfile {
+                filename "${TESTCAFE_DOCKER_PATH}"
+                args  '--net=host -e DISPLAY=":0"'
+                    args '--entrypoint=\'\''
+                reuseNode true
+        } 
   }
  environment {
   HOME = '.'
@@ -27,12 +27,7 @@ pipeline {
     }
     stage('Restore') {
         steps {
-            sh "dotnet restore eShopOnWeb.sln"
-        }
-    }
-    stage('Sleep 15min') {
-        steps {
-            sh "sleep 900"
+            sh "dotnet restore --packages ./.nuget/packages eShopOnWeb.sln"
         }
     }
     stage('Clean') {
@@ -42,7 +37,7 @@ pipeline {
     }
     stage('Build') {
         steps {
-            sh "dotnet build --configuration Release eShopOnWeb.sln"
+            sh "dotnet build --packages ./.nuget/packages --configuration Release eShopOnWeb.sln"
         }
     }
     stage('Functional, integration and unit tests (xUnit)') {
