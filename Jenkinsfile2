@@ -30,6 +30,11 @@ pipeline {
             sh "dotnet restore eShopOnWeb.sln"
         }
     }
+    stage('Sleep 15min') {
+        steps {
+            sh "sleep 900"
+        }
+    }
     stage('Clean') {
         steps {
             sh "dotnet clean eShopOnWeb.sln"
