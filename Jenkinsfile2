@@ -50,7 +50,7 @@ pipeline {
             sh "dotnet test -l:xunit -r:./allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
             sh "dotnet test -l:xunit -r:./allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
 
-            sh "find ./allure-report | grep '\.xml'"
+            sh "find ./allure-report | grep '.xml'"
         }
     }
  }
