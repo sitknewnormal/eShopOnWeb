@@ -6,7 +6,7 @@ pipeline {
             dockerfile {
                 filename "${TESTCAFE_DOCKER_PATH}"
                 args  '--net=host -e DISPLAY=":0"'
-                    args '--entrypoint=\'\''
+                args '--entrypoint=\'\''
                 reuseNode true
         } 
   }
@@ -42,11 +42,11 @@ pipeline {
     }
     stage('Functional, integration and unit tests (xUnit)') {
         steps {
-            sh "dotnet test -l:xunit -r:./allure-report/FunctionalTests ./tests/FunctionalTests/FunctionalTests.csproj"
-            sh "dotnet test -l:xunit -r:./allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
-            sh "dotnet test -l:xunit -r:./allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
+            sh "dotnet test -l:xunit -r:allure-report/FunctionalTests ./tests/FunctionalTests/FunctionalTests.csproj"
+            sh "dotnet test -l:xunit -r:allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
+            sh "dotnet test -l:xunit -r:allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
 
-            sh "find ./allure-report | grep '.xml'"
+            sh "find allure-report | grep '.xml'"
         }
     }
  }
