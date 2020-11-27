@@ -1,0 +1,53 @@
+node {
+    TESTCAFE_DOCKER_PATH = '.devcontainer/Dockerfile'
+}
+pipeline {
+  agent { 
+            dockerfile {
+                filename "${TESTCAFE_DOCKER_PATH}"
+                args  '--net=host -e DISPLAY=":0"'
+                    args '--entrypoint=\'\''
+                reuseNode true
+        } 
+  }
+ environment {
+  HOME = '.'
+ }
+ stages {
+    stage('Checkout') {
+        steps {
+            checkout([$class: 'GitSCM', branches: [
+            [name: '*/master']
+            ],
+            userRemoteConfigs: [
+            [url: 'https://github.com/sitknewnormal/eShopOnWeb.git']
+            ]
+            ])
+        }
+    }
+    stage('Restore') {
+        steps {
+            sh "dotnet restore --packages ./.nuget/packages eShopOnWeb.sln"
+        }
+    }
+    stage('Clean') {
+        steps {
+            sh "dotnet clean eShopOnWeb.sln"
+        }
+    }
+    stage('Build') {
+        steps {
+            sh "dotnet build --packages ./.nuget/packages --configuration Release eShopOnWeb.sln"
+        }
+    }
+    stage('Functional, integration and unit tests (xUnit)') {
+        steps {
+            sh "dotnet test -l:xunit -r:./allure-report/FunctionalTests ./tests/FunctionalTests/FunctionalTests.csproj"
+            sh "dotnet test -l:xunit -r:./allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
+            sh "dotnet test -l:xunit -r:./allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
+
+            sh "find ./allure-report | grep '.xml'"
+        }
+    }
+ }
+}
