@@ -42,9 +42,15 @@ pipeline {
     }
     stage('Functional, integration and unit tests (xUnit)') {
         steps {
+            sh "dotnet add ./tests/FunctionalTests/FunctionalTests.csproj  package XunitXml.TestLogger --version 2.0.0"
+            sh "dotnet add ./tests/IntegrationTests/IntegrationTests.csproj package XunitXml.TestLogger --version 2.0.0"
+            sh "dotnet add ./tests/UnitTests/UnitTests.csproj package XunitXml.TestLogger --version 2.0.0"
+
             sh "dotnet test -l:xunit -r:./allure-report/FunctionalTests ./tests/FunctionalTests/FunctionalTests.csproj"
             sh "dotnet test -l:xunit -r:./allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
             sh "dotnet test -l:xunit -r:./allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
+
+            sh "find ./allure-report | grep '\.xml'"
         }
     }
  }
