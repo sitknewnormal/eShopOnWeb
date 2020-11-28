@@ -2,7 +2,6 @@ pipeline {
   agent { 
             docker { 
                 image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'
-                // args '-v /var/jenkins_home/workspace/eShopOnWeb/allure-report:allure-report'
             } 
   }
  environment {
@@ -32,7 +31,7 @@ pipeline {
     }
     stage('Build') {
         steps {
-            sh "dotnet build --packages ./.nuget/packages --configuration Release eShopOnWeb.sln"
+            sh "dotnet build --configuration Release eShopOnWeb.sln"
         }
     }
     stage('Functional, integration and unit tests (xUnit)') {
