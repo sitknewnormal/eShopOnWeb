@@ -1,10 +1,9 @@
 pipeline {
-    agent none
+    agent { 
+        docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+    }
     stages {
         stage('Checkout') {
-            agent { 
-                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-            }
             steps {
                 checkout([$class: 'GitSCM', branches: [
                 [name: '*/master']
@@ -16,49 +15,42 @@ pipeline {
             }
         }
         stage('Restore') {
-            agent { 
-                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-            }
             steps {
                 sh "dotnet restore --packages ./.nuget/packages eShopOnWeb.sln"
             }
         }
         stage('Clean') {
-            agent { 
-                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-            }
             steps {
                 sh "dotnet clean eShopOnWeb.sln"
             }
         }
         stage('Build') {
-            agent { 
-                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-            }
             steps {
                 sh "dotnet build eShopOnWeb.sln --no-restore --configuration Release"
             }
         }
         stage('Functional, integration and unit tests (xUnit)') {
-            agent { 
-                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-            }
             steps {
                 sh "dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/FunctionalTests"
                 sh "dotnet test ./tests/IntegrationTests/IntegrationTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/IntegrationTests"
                 sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/UnitTests"
             }
         }
-        // stage('Publish Reports') {
-        //     steps{
-        //         script {
-        //             allure ([
-        //                 includeProperties: false, 
-        //                 jdk: '', 
-        //                 results: [[path: 'allure-report']]
-        //             ])
-        //         }            
-        //     }
-        // }
+    }
+    agent { 
+        docker { image 'openjdk'} 
+    }
+    stages {
+        stage('Publish Reports') {
+            steps{
+                script {
+                    allure ([
+                        includeProperties: false, 
+                        jdk: '', 
+                        results: [[path: 'allure-report']]
+                    ])
+                }            
+            }
+        }
     }
 }
