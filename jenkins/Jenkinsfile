@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Build') {
         steps {
-            sh "dotnet build --configuration Release eShopOnWeb.sln"
+            sh "dotnet build --packages ./.nuget/packages --configuration Release eShopOnWeb.sln"
         }
     }
     stage('Functional, integration and unit tests (xUnit)') {
@@ -39,7 +39,6 @@ pipeline {
             sh "dotnet test -l:xunit -r:allure-report/FunctionalTests ./tests/FunctionalTests/FunctionalTests.csproj"
             sh "dotnet test -l:xunit -r:allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
             sh "dotnet test -l:xunit -r:allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
-
             sh "find allure-report | grep '.xml'"
         }
     }
