@@ -1,9 +1,6 @@
-node {
-    TESTCAFE_DOCKER_PATH = '.devcontainer/Dockerfile'
-}
 pipeline {
   agent { 
-            dockerfile { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+            docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
   }
  environment {
   HOME = '.'
