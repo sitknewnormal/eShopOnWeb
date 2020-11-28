@@ -36,12 +36,10 @@ pipeline {
                 sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/UnitTests"
             }
         }
-    }
-    agent { 
-        docker { image 'openjdk'} 
-    }
-    stages {
         stage('Publish Reports') {
+            agent { 
+                docker { image 'openjdk'} 
+            }
             steps{
                 script {
                     allure ([
