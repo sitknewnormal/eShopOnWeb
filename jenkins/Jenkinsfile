@@ -31,16 +31,14 @@ pipeline {
     }
     stage('Build') {
         steps {
-            sh "dotnet build --packages ./.nuget/packages --configuration Release eShopOnWeb.sln"
+            sh "dotnet build eShopOnWeb.sln --no-restore --configuration Release"
         }
     }
     stage('Functional, integration and unit tests (xUnit)') {
         steps {
-            sh "sleep 3600"
-            // sh "dotnet test -l:xunit -r:allure-report/FunctionalTests --no-build ./tests/FunctionalTests/FunctionalTests.csproj"
-            // sh "dotnet test -l:xunit -r:allure-report/IntegrationTests ./tests/IntegrationTests/IntegrationTests.csproj"
-            // sh "dotnet test -l:xunit -r:allure-report/UnitTests ./tests/UnitTests/UnitTests.csproj"
-            // sh "find allure-report | grep '.xml'"
+            sh "dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/FunctionalTests"
+            sh "dotnet test ./tests/IntegrationTests/IntegrationTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/IntegrationTests"
+            sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/UnitTests"
         }
     }
  }
