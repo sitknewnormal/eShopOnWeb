@@ -58,6 +58,7 @@ pipeline {
                 } 
             }
             steps {
+                sh "pwd"
                 sh "testcafe chromium:headless /var/jenkins_home/workspace/eShopOnWeb/tests/e2eTests/*_test.js -r spec,xunit:/var/jenkins_home/workspace/eShopOnWeb/tests/allure-results/e2eTests/TestResults.xml" 
             }
             // agent any
