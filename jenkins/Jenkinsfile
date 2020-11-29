@@ -43,9 +43,9 @@ pipeline {
                 docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
             }
             steps {
-                sh "dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/FunctionalTests"
-                sh "dotnet test ./tests/IntegrationTests/IntegrationTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/IntegrationTests"
-                sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-report/UnitTests"
+                sh "dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/FunctionalTests"
+                sh "dotnet test ./tests/IntegrationTests/IntegrationTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/IntegrationTests"
+                sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/UnitTests"
             }
         }
         stage('Publish Reports') {
@@ -57,7 +57,7 @@ pipeline {
                     allure ([
                         includeProperties: false, 
                         jdk: '', 
-                        results: [[path: 'allure-report']]
+                        results: [[path: 'allure-results/FunctionalTests'],[path: 'allure-results/IntegrationTests'],[path: 'allure-results/UnitTests']]
                     ])
                 }            
             }
