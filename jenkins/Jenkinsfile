@@ -51,11 +51,8 @@ pipeline {
         // }
         stage('End 2 end eShopOnWeb tests with TestCafe') {
             agent any
-            environment{
-                HOME = '.'
-            }
             steps {
-                sh "docker run -u 0:0 --rm -v ${HOME}/tests:/tests testcafe/testcafe chromium /tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml"
+                sh "docker run -u 0:0 --rm -v ${WORKSPACE}/tests:/tests testcafe/testcafe chromium /tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml"
             }
         }
         stage('Publish Reports') {
