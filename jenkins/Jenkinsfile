@@ -50,10 +50,20 @@ pipeline {
         //     }
         // }
         stage('End 2 end eShopOnWeb tests with TestCafe') {
-            agent any
-            steps {
-                sh "docker run -u 0:0 --rm -v ${JENKINS_HOME}/workspace/eShopOnWeb/tests:/tests testcafe/testcafe chromium /tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml"
+            agent { 
+                docker { 
+                    image 'testcafe/testcafe'
+                    args '-v /var/jenkins_home/workspace/eShopOnWeb:/tests'
+                    args '--entrypoint=\'\''
+                } 
             }
+            steps {
+                sh "testcafe /tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml" 
+            }
+            // agent any
+            // steps {
+            //     sh "docker run -u 0:0 --rm -v c:/sitk/jenkins/jenkins_home2/workspace/eShopOnWeb:/tests testcafe/testcafe chromium /tests/tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml"
+            // }
         }
         stage('Publish Reports') {
             agent { 
