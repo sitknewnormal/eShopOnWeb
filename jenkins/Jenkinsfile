@@ -1,54 +1,54 @@
 pipeline {
     agent none
     stages {
-        // stage('Checkout') {
-        //     agent { 
-        //         docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-        //     }
-        //     steps {
-        //         checkout([$class: 'GitSCM', branches: [
-        //         [name: '*/master']
-        //         ],
-        //         userRemoteConfigs: [
-        //         [url: 'https://github.com/sitknewnormal/eShopOnWeb.git']
-        //         ]
-        //         ])
-        //     }
-        // }
-        // stage('Restore') {
-        //     agent { 
-        //         docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-        //     }
-        //     steps {
-        //         sh "dotnet restore --packages ./.nuget/packages eShopOnWeb.sln"
-        //     }
-        // }
-        // stage('Clean') {
-        //     agent { 
-        //         docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-        //     }
-        //     steps {
-        //         sh "dotnet clean eShopOnWeb.sln"
-        //     }
-        // }
-        // stage('Build') {
-        //     agent { 
-        //         docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-        //     }
-        //     steps {
-        //         sh "dotnet build eShopOnWeb.sln --no-restore --configuration Release"
-        //     }
-        // }
-        // stage('Functional, integration and unit tests (xUnit)') {
-        //     agent { 
-        //         docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
-        //     }
-        //     steps {
-        //         sh "dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/FunctionalTests"
-        //         sh "dotnet test ./tests/IntegrationTests/IntegrationTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/IntegrationTests"
-        //         sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/UnitTests"
-        //     }
-        // }
+        stage('Checkout') {
+            agent { 
+                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+            }
+            steps {
+                checkout([$class: 'GitSCM', branches: [
+                [name: '*/master']
+                ],
+                userRemoteConfigs: [
+                [url: 'https://github.com/sitknewnormal/eShopOnWeb.git']
+                ]
+                ])
+            }
+        }
+        stage('Restore') {
+            agent { 
+                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+            }
+            steps {
+                sh "dotnet restore --packages ./.nuget/packages eShopOnWeb.sln"
+            }
+        }
+        stage('Clean') {
+            agent { 
+                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+            }
+            steps {
+                sh "dotnet clean eShopOnWeb.sln"
+            }
+        }
+        stage('Build') {
+            agent { 
+                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+            }
+            steps {
+                sh "dotnet build eShopOnWeb.sln --no-restore --configuration Release"
+            }
+        }
+        stage('Functional, integration and unit tests (xUnit)') {
+            agent { 
+                docker { image 'mcr.microsoft.com/dotnet/core/sdk:3.1-bionic'} 
+            }
+            steps {
+                sh "dotnet test ./tests/FunctionalTests/FunctionalTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/FunctionalTests"
+                sh "dotnet test ./tests/IntegrationTests/IntegrationTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/IntegrationTests"
+                sh "dotnet test ./tests/UnitTests/UnitTests.csproj --configuration Release --logger xunit --no-build --no-restore --results-directory ./allure-results/UnitTests"
+            }
+        }
         stage('End 2 end eShopOnWeb tests with TestCafe') {
             agent { 
                 docker { 
