@@ -53,18 +53,12 @@ pipeline {
             agent { 
                 docker { 
                     image 'testcafe/testcafe'
-                    // args '-v /var/jenkins_home/workspace/eShopOnWeb:/tests'
                     args '--entrypoint=\'\''
                 } 
             }
             steps {
-                sh "pwd"
-                sh "testcafe chromium:headless /var/jenkins_home/workspace/eShopOnWeb/tests/e2eTests/*_test.js -r spec,xunit:/var/jenkins_home/workspace/eShopOnWeb/tests/allure-results/e2eTests/TestResults.xml" 
+                sh "testcafe chromium:headless tests/e2eTests/*_test.js -r spec,xunit:allure-results/e2eTests/TestResults.xml" 
             }
-            // agent any
-            // steps {
-            //     sh "docker run -u 0:0 --rm -v c:/sitk/jenkins/jenkins_home2/workspace/eShopOnWeb:/tests testcafe/testcafe chromium /tests/tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml"
-            // }
         }
         stage('Publish Reports') {
             agent { 
