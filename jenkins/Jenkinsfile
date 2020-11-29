@@ -58,7 +58,7 @@ pipeline {
                 } 
             }
             steps {
-                sh "testcafe /tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml" 
+                sh "testcafe chromium /tests/e2eTests/*_test.js -r spec,xunit:/tests/allure-results/e2eTests/TestResults.xml" 
             }
             // agent any
             // steps {
